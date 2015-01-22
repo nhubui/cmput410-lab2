@@ -1,7 +1,7 @@
 import socket
 import sys
 import thread
-import msvcrt
+
 #create an INET, STREAMing socket:
 #this is the type of socket- socket.AF_INET
 #this is for TCP packages?? - socket.SOCK_STREAM
