@@ -1,5 +1,7 @@
 import socket
 import sys
+import thread
+import msvcrt
 #create an INET, STREAMing socket:
 #this is the type of socket- socket.AF_INET
 #this is for TCP packages?? - socket.SOCK_STREAM
@@ -12,7 +14,7 @@ except socket.error as msg:
 print(' Socket created successfully')
 
 host = ''
-port = 8080
+port = 8088
 
 try:
     s.bind((host, port))
@@ -23,17 +25,27 @@ except socket.error:
 print('Socket bind complete.')
 s.listen(10) #limitation of number of connection that can be in the backlog
 print('Socket is now listening.')
-conn, addr = s.accept()
-print('Connected with '+ addr[0] + ':' + str(addr[1]))
 
-data = conn.recv(1024)
-#data2 = str(data)
-#data2 = data2[2:len(data2)-5]
-reply = "hello "+ str(data) 
-conn.sendall(reply.encode("UTF8"))
+def client(conn):
+    while True:
+        data = conn.recv(1024)
+        if not data: 
+            break            
+        data2 = str(data)
+        data2 = data2[:len(data2)-2]
+        reply = data2 + " nhu \n"
+        conn.sendall(reply.encode("UTF8"))    
+    conn.close() 
 
-conn.close()
+while True:
+    conn, addr = s.accept()
+    print('Connected with '+ addr[0] + ':' + str(addr[1]))    
+
+    thread.start_new_thread( client, (conn, ) )
+
 s.close()
+
+   
 
 #try:
     #remote_ip= socket.gethostbyname(host)
