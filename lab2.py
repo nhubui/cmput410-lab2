@@ -14,7 +14,7 @@ except socket.error as msg:
 print(' Socket created successfully')
 
 host = ''
-port = 8088
+port = 8080
 
 try:
     s.bind((host, port))
@@ -33,6 +33,8 @@ def client(conn):
             break            
         data2 = str(data)
         data2 = data2[:len(data2)-2]
+        if data2 == chr(27): #exit program if the esc is pressed
+            break
         reply = data2 + " nhu \n"
         conn.sendall(reply.encode("UTF8"))    
     conn.close() 
